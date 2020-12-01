@@ -1,0 +1,81 @@
+- hosts: all
+  #vars_prompt:
+  #  - name: "dvd_dir"
+  #    private: no
+  #    prompt: "Enter the directory name"
+ 
+  #vars:
+  #- dvd_dir: "/dvd5"
+  #- doc_root: "/var/www/lw"
+  #- port: "8080"
+
+  vars_files:
+  - http_vars.yml
+
+  handlers:
+  - name: restart_service
+    service:
+        name: "httpd"
+        state: restarted
+
+  tasks:
+  - name: "Creating Mount Point"
+    file:
+        state: directory
+        path: "{{dvd_dir}}"
+
+  - name: "Mounting CD ROM"
+    mount:
+        src: "/dev/cdrom"
+        path: "{{dvd_dir}}"
+        fstype: "iso9660"
+        state: mounted
+
+  - name: "Creating yum repo" 
+    yum_repository:
+        baseurl: "{{dvd_dir}}/AppStream"
+        name: "mydvd1"
+        description: "This is dvd1ffff"
+        gpgcheck: no
+
+  - name: "Creting yum repo" 
+    yum_repository:
+        name: "mydvd2"
+        description: "This is dvd1sss"
+        baseurl: "{{dvd_dir}}/BaseOS"
+        gpgcheck: no
+
+  - name: "Installing httpd software"
+    package:
+        name: "httpd"
+        state: present
+ 
+  - name: "Creating Document root"
+    file:
+        path: "{{ doc_root }}"
+        state: directory
+
+  - name: "Copying the Config file"
+    template:
+        src: "lw.conf"
+        dest: "/etc/httpd/conf.d/lw.conf"
+    notify:
+        - restart_service
+
+  - name: "Copying web pages to document Root"
+    copy:
+        src: "index.html"
+        dest: "{{ doc_root }}/index.html"
+
+  - name: "Starting services" 
+    service:
+        name: "httpd"
+        enabled: yes
+        state: started
+
+  - name: "Enabling firewall to allow port"  
+    firewalld:
+        port: "{{ port }}/tcp"
+        state: enabled
+        permanent: yes
+        immediate: yes
