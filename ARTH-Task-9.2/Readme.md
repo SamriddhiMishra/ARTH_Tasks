@@ -4,7 +4,7 @@
 #### 2) Files in html folder go to /var/www/html
 #### 3) Main menu is in mainmenu.html file
 
-# Pre-requisites->
+# Pre-requisites-
 #### 1) Give apache user sudo powers
 #### 2) Make sure to keep jdk and hadoop rpm files in /var/www/cgi-bin folder
 #### 3) Stop SElinux and Firewalld(In case server is AWS Instance, then allow All Traffic)
