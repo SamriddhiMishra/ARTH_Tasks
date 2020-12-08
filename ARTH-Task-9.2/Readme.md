@@ -1,7 +1,8 @@
 # Code for ARTH-Task-9.2 ##
 
-#### Files in cgi folder go to /var/www/cgi-bin
-#### Files in html folder go to /var/www/html
+#### 1) Files in cgi folder go to /var/www/cgi-bin
+#### 2) Files in html folder go to /var/www/html
+#### 3) Main menu is in mainmenu.html file
 
 # Pre-requisites->
 #### 1) Give apache user sudo powers
