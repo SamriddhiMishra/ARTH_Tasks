@@ -1,0 +1,255 @@
+<html>
+<head>
+<style>
+:root{
+  /*  Sea Green */
+  --left-color: #654ea3;
+  /*  Light Blue  */
+  --right-color: #eaafc8;
+}
+body, html{
+  font-family: 'Helvetica Neue', sans-serif;
+  letter-spacing: 1.5px;
+  background-image: linear-gradient(to right, var(--left-color), var(--right-color));
+  color: white;
+}
+.container{
+  width: 25%;
+  height: 57%;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 2px 10px 40px rgba(22,20,19,0.4);
+  padding: 10 10;
+  margin: 50px;
+  float:left;
+}
+h3
+{
+  color: var(--left-color);
+}
+input[type=text], select {
+  width: 75%;
+  padding: 12px 12px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #dcdcdc;
+  border-radius: 8px;
+  outline: none;
+}
+input[type=text]:focus {
+  border: 2px solid var(--left-color);
+}
+input[type=submit] {
+  width: 45%;
+  background-color: var(--left-color);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 10px;
+  margin: 8px 8px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+input[type=submit]:hover {
+  background-color: var(--right-color);
+}
+textarea{
+  width: 75%;
+  height: 20%;
+}
+hr{
+border: 1px solid var(--left-color);
+background-color: var(--left-color);
+}
+h1{
+text-shadow: 2px 2px 2px rgba(22,20,19,0.4);
+}
+</style>
+</head>
+
+<body>
+
+<center>
+<br><br>
+<h1 style="font-size: 48px;">Logical Volume Management</h1>
+</center>
+
+<div class="container">
+<center>
+<h3>Display all available storage devices attached</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="1">
+<input type="submit" value="Display"/>
+</form>
+
+<hr>
+
+<h3>Display information about Physical Volumes(PVs)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="2">
+<input type="text" name="show_pv" placeholder="Choose one particular PV (default all)">
+<input type="submit" value="PV details"/>
+</form>
+</center>
+</div>
+
+
+<div class="container">
+<center>
+<h3>Display information about Volume Groups(VGs)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="3">
+<input type="text" name="show_vg" placeholder="Choose one particular VG (default all)">
+<input type="submit" value="VG details"/>
+</form>
+
+<hr>
+
+<h3>Display information about Logical Volumes(LVs)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="4">
+<input type="text" name="show_lv" placeholder="Choose path to particular LV (default all)">
+<input type="submit" value="LV details"/>
+</form>
+</center>
+</div>
+
+
+<div class="container">
+<center>
+<h3>Create Physical Volume(PV)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="5">
+<input type="text" name="create_pv" placeholder="Storage device name to create PV">
+<input type="submit" value="Create PV"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Create Volume Group(VG)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="6">
+<input type="text" name="create_vg" placeholder="Give name to new VG">
+<input type="text" name="vg_pv1" placeholder="Enter the name of PV1">
+<input type="text" name="vg_pv2" placeholder="Enter the name of PV2">
+<input type="submit" value="Create VG"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Create Logical Volume(LV)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="7">
+<input type="text" name="create_lv" placeholder="Give name to new LV">
+<input type="text" name="create_lv_size" placeholder="Enter the size of LV">
+<input type="text" name="create_lv_vg" placeholder="Enter name of the VG to create LV">
+<input type="text" name="create_lv_mount" placeholder="Enter the path to mount point of the LV">
+<input type="submit" value="Create LV"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Extend Logical Volume(LV)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="8">
+<input type="text" name="extend_lv" placeholder="Enter the name of LV you want to extend">
+<input type="text" name="extend_lv_vg" placeholder="Enter name of the VG in which  LV created">
+<input type="text" name="extend_lv_size" placeholder="Enter the final size of LV">
+<input type="submit" value="Extend LV"/>
+</form>
+</center>
+</div>
+
+
+<div class="container">
+<center>
+<h3>Reduce Logical Volume(LV)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="9">
+<input type="text" name="reduce_lv" placeholder="Enter LV name to reduce">
+<input type="text" name="reduce_lv_vg" placeholder="Enter VG name of the LV created">
+<input type="text" name="reduce_lv_size" placeholder="Enter the final size of LV">
+<input type="text" name="reduce_lv_mount" placeholder="Enter the path to mount point of the LV">
+<input type="submit" value="Reduce LV"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Extend Volume Group(VG)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="10">
+<input type="text" name="extend_vg" placeholder="Enter name of the VG you want to extend">
+<input type="text" name="extend_vg_pv" placeholder="Enter name of the PV to add to VG">
+<input type="submit" value="Extend VG"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Reduce Volume Group(VG)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="hidden" name="choice" value="11">
+<input type="text" name="reduce_vg" placeholder="Enter name of the VG to reduce">
+<input type="text" name="reduce_vg_pv" placeholder="Enter name of the PV to remove from VG">
+<input type="submit" value="Reduce VG"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Remove Logical Volume(LV)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="text" name="lv_remove_path" placeholder="Enter path to LV to remove">
+<input type="hidden" name="choice" value="12">
+<input type="submit" value="Remove LV"/>
+</form>
+
+<hr>
+
+<h3>Remove Volume Group(VG)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="text" name="vg_remove" placeholder="Enter name of VG you want to remove">
+<input type="hidden" name="choice" value="13">
+<input type="submit" value="Remove VG"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Remove Physical Volume(PV)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="text" name="pv_remove" placeholder="Enter path to PV you want to remove">
+<input type="hidden" name="choice" value="14">
+<input type="submit" value="Remove PV"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Create file in Logical Volume(LV)</h3>
+<form action="http://54.242.199.80/cgi-bin/lvm.py" method="post">
+<input type="text" name="create_file" placeholder="Enter the filename with extension">
+<textarea name="file_text" placeholder="Enter text..."> </textarea>
+<input type="text" name="file_folder" placeholder="Enter the path to folder">
+<input type="hidden" name="choice" value="15">
+<input type="submit" value="Create File"/>
+</form>
+</center>
+</div>
+
+</body>
+</html>

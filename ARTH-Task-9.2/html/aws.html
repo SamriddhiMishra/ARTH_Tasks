@@ -1,0 +1,164 @@
+<html>
+<head>
+<style>
+:root{
+  /*  Sea Green */
+  --left-color: #de6262;
+  /*  Light Blue  */
+  --right-color: #ffb88c;
+}
+body, html{
+  font-family: 'Helvetica Neue', sans-serif;
+  letter-spacing: 1.5px;
+  background-image: linear-gradient(to right, var(--left-color), var(--right-color));
+  color: white;
+}
+.container{
+  width: 25%;
+  height: 70%;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 2px 10px 40px rgba(22,20,19,0.4);
+  padding: 10 10;
+  margin: 50px;
+  float:left;
+}
+h3
+{
+  color: var(--left-color);
+}
+input[type=text], select {
+  width: 75%;
+  padding: 12px 18px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #dcdcdc;
+  border-radius: 8px;
+  outline: none;
+}
+input[type=text]:focus {
+  border: 2px solid var(--left-color);
+}
+input[type=submit] {
+  width: 45%;
+  background-color: var(--left-color);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 10px;
+  margin: 8px 8px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+input[type=submit]:hover {
+  background-color: var(--right-color);
+}
+textarea{
+  width: 70%;
+  height: 20%;
+}
+hr{
+border: 1px solid var(--left-color);
+background-color: var(--left-color);
+}
+h1{
+text-shadow: 2px 2px 2px rgba(22,20,19,0.4);
+}
+</style>
+</head>
+
+<body>
+
+<center>
+<img src="aws.png" height="25%" width="20%">
+<h1 style="font-size: 42px;">Amazon Web Services</h1>
+</center>
+
+<div class="container">
+<center>
+<h3>Create a Key-Pair</h3>
+<form action="http://54.242.199.80/cgi-bin/aws.py" method = "post">
+<input type="text" name="new_kname" placeholder= "Enter the Key Name">
+<input type="hidden" name="choice" value="1">
+<input type="submit" value="Create Key-Pair"/>
+</form>
+</center>
+
+<hr>
+
+<center>
+<h3>Create security group</h3>
+<form action="http://54.242.199.80/cgi-bin/aws.py" method = "post">
+<input type="text" name="new_sgname" placeholder= "Enter the Security Group Name">
+<input type="text" name="descp" placeholder= "Enter the desription">
+<input type="hidden" name="choice" value="2">
+<input type="submit" value="Create SG"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Add inbound rules to security group</h3>
+<form action="http://54.242.199.80/cgi-bin/aws.py" method = "post">
+<input type="text" name="rule_sgname" placeholder= "Enter the SG name to add rules">
+<input type="text" name="protocol" placeholder= "Enter the Protocol">
+<input type="text" name="port" placeholder= "Enter the Port Number to allow">
+<input type="text" name="ip" placeholder= "Enter the IP Address to allow">
+<input type="hidden" name="choice" value="3">
+<input type="submit" value="Create SG Rules"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Launch an instance</h3>
+<form action="http://54.242.199.80/cgi-bin/aws.py" method = "post">
+<select name="ami">
+<option value="">Select Image Id for instance launch</option>
+<option value="1">Amazon Linux 2 AMI (HVM), SSD Volume</option>
+<option value="2">Red Hat Enterprise Linux 8 (HVM), SSD Volume</option>
+<option value="3">Ubuntu Server 20.04 LTS (HVM), SSD Volume</option>
+<option value="4">Microsoft Windows Server 2019 Base</option>
+</select>
+<input type="text" name="osname" placeholder= "Give Name to new Instance">
+<input type="text" name="ec2_az" placeholder= "Give AZ to place Instance">
+<input type="text" name="itype" placeholder= "Enter the Instance type (default t2.micro)">
+<input type="text" name="ec2_kname" placeholder= "Provide Key-Pair to new Instance">
+<input type="text" name="ec2_sgname" placeholder= "Provide Security Group to new Instance">
+<input type="hidden" name="choice" value="4">
+<input type="submit"  value="Launch Instance"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Create an EBS Volume</h3>
+<form action="http://54.242.199.80/cgi-bin/aws.py" method = "post">
+<input type="text" name="vol_az" placeholder= "Provide AZ name, to create to new volume">
+<input type="text" name="size" placeholder= "Provide Size of the new Volume (K/M/G)">
+<input type="hidden" name="choice" value="5">
+<input type="submit"  value="Create Volume"/>
+</form>
+</center>
+</div>
+
+<div class="container">
+<center>
+<h3>Attach EBS Volume to as Instance</h3>
+<form action="http://54.242.199.80/cgi-bin/aws.py" method = "post">
+<input type="text" name="vid" placeholder= "Give Volume ID">
+<input type="text" name="iid" placeholder= "Give Instance ID">
+<input type="text" name="vol_name" placeholder= "Give name to Volume">
+<input type="hidden" name="choice" value="6">
+<input type="submit"  value="Attach Volume"/>
+</form>
+</center>
+</div>
+
+</body>
+</html>

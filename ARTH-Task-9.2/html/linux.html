@@ -1,0 +1,95 @@
+<html>
+<head>
+<style>
+:root{
+  /*  Sea Green */
+  --left-color: #1e1d1f;
+  /*  Light Blue  */
+  --right-color: #df405a;
+}
+body{
+  font-family: 'Helvetica Neue', sans-serif;
+  letter-spacing: 1.5px;
+  color: white;
+  background-image: linear-gradient(to right, var(--left-color), var(--right-color));
+}
+.container{
+  width: 60%;
+  height: 65%;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 2px 10px 40px rgba(22,20,19,0.4);
+  padding: 8px 8px;
+  float:left;
+}
+div{
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+h2
+{
+  color: #ba2d25;
+}
+input[type=text], select {
+  width: 70%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #dcdcdc;
+  border-radius: 8px;
+  outline: none;
+}
+input[type=text]:focus {
+  border: 2px solid var(--right-color);
+}
+input[type=submit] {
+  width: 30%;
+  height: 8%;
+  background-color: #ba2d25;
+  color: white;
+  font-size: 14px;
+  padding: 10px 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+input[type=submit]:hover {
+  background-color: #661a1a;
+}
+textarea{
+  width: 70%;
+  height: 20%;
+}
+h1{
+font-size: 42px;
+text-shadow: 2px 2px 2px rgba(22,20,19,0.4);
+color: var(--right-color);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<center>
+<br>
+<img src="https://www.zebrac.com/zePortal/WebFiles/ZEBRA/Logo-RedHat-B-Color-RGB.png" width="160" height="120"> 
+<br>
+<h1>Enter Linux commands</h1>
+<br>
+<form action="http://192.168.1.2/cgi-bin/linux.py" method="post">
+<input type= "text" name="command" placeholder= "Enter command...">
+<br><br><br>
+<input type="submit" value="Display"/>
+</form>
+</center>
+</div>
+
+</body>
+</html>
