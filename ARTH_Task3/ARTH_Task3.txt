@@ -1,0 +1,19 @@
+ARTH Task 3- 
+
+Create key pair-
+aws ec2 create-key-pair --key-name [KeyName]
+
+Create security Group
+aws ec2 create-security-group --group-name [GroupName] --description "Launched from CLI"
+
+Create inbound rules to Security Group
+aws ec2 authorize-security-group-ingress --group-name [GroupName] --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+Launch an instance
+aws ec2 run-instances --image-id [AMI_ImageID] --instance-type t2.micro --key-name [KeyName] --security-group-ids [GroupID] --subnet-id [SubnetID] --tag-specifications "ResourceType = instance , Tags = [{Key="Name",Value="[InstanceName]"}]"
+
+Create an EBS Volume 1GB
+aws ec2 create-volume --availability-zone "[AZ_Name]" --size [SizeinGB]
+
+Attach Volume to instance
+aws ec2 attach-volume --instance-id [InstanceID] --volume-id [VolumeID] --device [/dev/xvde]
