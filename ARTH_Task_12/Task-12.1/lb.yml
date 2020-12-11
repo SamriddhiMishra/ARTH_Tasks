@@ -1,0 +1,26 @@
+- name: "Configuring backend server"
+  hosts: web_server
+  tasks:
+  -  package:
+       name:
+        - "httpd"
+        - "php"
+  -  copy:
+       src: "index.php"
+       dest: "/var/www/html"
+  -  service:
+       name: "httpd"
+       state: restarted
+- name: "Configuring Load Balancer"
+  hosts: load_balancer 
+  gather_facts: no
+  tasks:
+  - package:
+      name: "haproxy"
+  - template:
+      dest: "/etc/haproxy/haproxy.cfg"
+      src: "haproxy.cfg.j2"
+  - service:
+      name: "haproxy"
+      state: restarted
+       
