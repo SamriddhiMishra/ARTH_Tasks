@@ -1,0 +1,72 @@
+                          		    ###########  Task 7.2  ###########
+
+					🔅Configuring HTTPD Server on Docker Container
+
+Step 1) Launch the Instance
+
+Step 2) Connect to your instance
+
+Step 3) Login to root account 
+ 	sudo su - root
+
+Step 4) Update the installed packages and package cache on your instance
+	yum update -y
+
+Step 5) Install the most recent Docker Community Edition package
+	amazon-linux-extras install docker
+	OR
+	yum install docker
+
+Step 6) Start the Docker service
+	systemctl start docker
+
+Step 7) Pull the image
+	docker pull centos:7
+
+Step 8) Launch the conainer
+	docker run -it --name webserver -p 8080:80 centos:7
+
+#### NOTE ####
+- We will use the '-p' option here, which maps 8080 port of the Host or Base-OS(here Amazon Linux) with 80 port of container(CentOS 7)
+- By default, when you create a container, it does not publish any of its ports to the outside world.
+  To make a port available to services outside of Docker, or to Docker containers which are not connected 
+  to the container's network, use the --publish or -p flag. This creates a firewall rule which maps a container
+  port to a port on the Docker host.
+- We would be using host’s public ip and 8080 port to take in requests and host would forward these requests
+  to the Apache web server running at port 80 of container.
+
+
+Step 9) Install APACHE Webserver in the new container
+	yum install httpd
+
+
+Step 10) Configuring the webserver by copying webpages into /var/www/html folder
+	cd /var/www/html
+	vi index.html
+	<body bgcolor = "aqua">
+	<h1>!!!!!!!!!!!! Welcome to the webpage !!!!!!!!!!</h1>
+	</body>
+
+Step 11) Start the webserver service
+	/usr/sbin/httpd
+
+Step 12) Make webserver service permanant
+	vi /root/.bashrc
+	rm -rf /var/run/httpd/* 
+	/usr/sbin/httpd
+
+Step 13) Use Public IP to access webpage by requesting host's port 8080
+	http://18.188.169.213:8080
+	or 
+	http://18.188.169.213:8080/index.html
+
+
+
+				🔅Setting up Python Interpreter and running Python Code on Docker Container
+Step 1) yum install python3
+
+Step 2) vi file.py
+	print("Hello!")
+	print("Thanks for watching!")
+
+Step 3) python3 file.py 
