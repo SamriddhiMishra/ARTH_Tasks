@@ -1,0 +1,116 @@
+Start the instance-
+aws ec2 start-instances --instance-ids [Instance-ID]
+aws ec2 start-instances --instance-ids i-0117f2554080d4101
+
+
+Login to the instance-
+ssh -i [key_name.pem] [username]@[public_ip]
+ssh -i arthos.pem ec2-user@3.16.218.15
+
+Login to root account-
+sudo su - root
+
+
+Install HTTPD Webserver-
+yum install httpd
+
+
+Allow HTTP Port to connect to server-
+exit
+aws ec2 authorize-security-group-ingress --group-name launch-wizard-10 --protocol all --port all --cidr 0.0.0.0/0 
+aws ec2 authorize-security-group-ingress --group-name launch-wizard-6 --protocol tcp --port 80 --cidr 0.0.0.0/0  
+aws ec2 authorize-security-group-ingress --group-name [GroupName] --protocol tcp --port 22 --cidr 0.0.0.0/0 
+
+Protocols- tcp|udp|icmp|all
+
+
+Create a file to show on webserver-
+cd /var/www/html
+vi file.html
+<body>
+Welcome
+<img src="" height="200" width="250" />
+</body>
+
+
+Start services-
+systemctl start httpd
+
+################## Currently all the Website data is stored in the root device attached to EC2 instance ############################
+URL-
+https://IP/file.html
+
+
+Create an EBS Volume 1GB-
+aws ec2 create-volume --availability-zone "us-east-2a" --size 1
+aws ec2 create-volume --availability-zone "[AZ_Name]" --size [SizeinGB]
+
+
+Attach Volume to instance-
+aws ec2 attach-volume --instance-id [InstanceID] --volume-id [VolumeID] --device [/dev/xvdr]
+aws ec2 attach-volume --instance-id i-0117f2554080d4101 --volume-id vol-05542aad5db90d469 --device /dev/sdr
+
+
+Create Partition in the new EBS Volume-
+fdisk -l  ->See the name of the device you just attached in our case it is /dev/xvdr
+fdisk /dev/xvde  ->Enter inside the devcice
+n  ->new partition
+p  ->primary partition
+Click Enter  ->Make partition no 1
+Click Enter  ->Start from sector 2048
+Click Enter  ->To end at the last sector of device. So create only 1 partition in whole device
+wq  ->Save partition and exit
+
+
+Format the partition-
+mkfs.ext4 /dev/xvdr1
+
+
+Mount the partition to the /var/www/html folder so that all the website data stored in EBS Volume
+mount /dev/xvdr1 /var/www/html
+df -h  ->To confirm the mount
+
+
+############ But now the file previosly in this folder(file.html) will be lost. Create a new file #############
+
+Again create file-
+vi file.html
+<body>
+Welcome
+<img src="" height="200" width="250" />
+</body>
+
+
+#################### Now all website data is stored in the new EBS volume ###########################
+
+
+Create S3 storage-
+aws s3 mb s3://arthbuck --region us-east-2
+
+
+Copy the image to the bucket-
+aws s3 cp C:\Users\Asus\Downloads\p.jpg s3://arthbuck/pic.jpg --acl public-read
+
+
+Genearate the url-
+aws s3 presign s3://arthbuck/pic.jpg
+https://arthbuck.s3.us-east-2.amazonaws.com/pic.jpg
+
+
+Create Cloudfront distribution-
+aws cloudfront create-distribution --origin-domain-name arthbuck.s3.amazonaws.com
+  
+
+Copy the Distribution Domain Name
+[DomainName]
+d3n2xyfzp9ljtr.cloudfront.net
+
+Copy the URL and put in browser to see the image
+https://d3n2xyfzp9ljtr.cloudfront.net/pic.jpg
+
+Make sure to put http instead of https in the html file and save the file
+http://d3n2xyfzp9ljtr.cloudfront.net/pic.jpg
+
+#################### Website code in EBS Volume and the static file(image) in S3 storage distributed using Cloudfront ####################
+
+
