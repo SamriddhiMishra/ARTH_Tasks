@@ -1,5 +1,6 @@
 
-## Task 1- ## Does client takes the entire data to master or does master provides the IP addresses of Datanodes so that client can upload the file to the Datanodes. 
+## Task 1- ## 
+Does client takes the entire data to master or does master provides the IP addresses of Datanodes so that client can upload the file to the Datanodes. 
 Question- Who is the one uploading the file?
 Answer- Client gets the IP from Master and uploads the file to DataNode.
 
