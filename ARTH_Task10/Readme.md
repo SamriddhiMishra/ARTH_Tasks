@@ -1,6 +1,6 @@
 ## ARTH - Task 10 👨🏻‍💻
 ### Task Description📄
-###🔰Write an Ansible PlayBook that does the following operations in the managed nodes:
+### 🔰Write an Ansible PlayBook that does the following operations in the managed nodes:
 🔹 Configure Docker
 
 🔹 Start and enable Docker services
