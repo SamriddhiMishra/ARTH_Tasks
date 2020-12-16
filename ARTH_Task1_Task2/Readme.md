@@ -1,13 +1,13 @@
 
-Task 1- Does client takes the entire data to master or does master provides the IP addresses of Datanodes so that client can upload the file to the Datanodes. 
+## Task 1- ## Does client takes the entire data to master or does master provides the IP addresses of Datanodes so that client can upload the file to the Datanodes. 
 Question- Who is the one uploading the file?
 Answer- Client gets the IP from Master and uploads the file to DataNode.
 
-Task 2- 
+## Task 2- ##
 Question: Does client go to master and then read the file on slave via Master or Does Client go to slave directly and read the data?
 Answer: Client goes to slave directly and reads the data stored on slave.
 
-Task 3-
+## Task 3- ##
 ARTH- The School Of Technologies
 
 ✴️ Setup a Hadoop cluster with one NameNode(Master) and 4 DataNodes(Slave) and one Client Node.
