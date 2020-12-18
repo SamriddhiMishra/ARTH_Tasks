@@ -58,8 +58,8 @@
       description: "EC2 group"
       vpc_id: "vpc-a3cb08de"
       region: "us-east-1"
-      aws_secret_key: "u177DwpM2q7hCJhIz+HwOk6Q/KLTZiAeRkOb1HP8"
-      aws_access_key: "AKIAQWRASTHERF22KZMQ"
+      aws_secret_key: "u177DwpM2********************Ob1HP8"
+      aws_access_key: "AKI************2KZMQ"
       rules:
       - proto: tcp
         ports:
@@ -73,8 +73,8 @@
       description: "EC2 group"
       vpc_id: "vpc-0add4af20c1bde27b"
       region: "us-east-1"
-      aws_secret_key: "u177DwpM2q7hCJhIz+HwOk6Q/KLTZiAeRkOb1HP8"
-      aws_access_key: "AKIAQWRASTHERF22KZMQ"
+      aws_secret_key: "u177****************************HP8"
+      aws_access_key: "AKIA***************KZMQ"
       rules:
       - proto: tcp
         ports:
