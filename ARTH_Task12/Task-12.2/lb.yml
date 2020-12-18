@@ -1,0 +1,84 @@
+- name: "Configuring backend server"
+  hosts: web_server
+  become: true
+  become_user: root
+  tasks:
+  -  package:
+       name:
+        - "httpd"
+        - "php"
+  -  copy:
+       src: "index.php"
+       dest: "/var/www/html"
+  -  service:
+       name: "httpd"
+       state: restarted
+
+- name: "Configuring Load Balancer"
+  hosts: load_balancer
+  become: true
+  become_user: root
+  gather_facts: no
+  tasks:
+  - package:
+      name: "haproxy"
+  - template:
+      dest: "/etc/haproxy/haproxy.cfg"
+      src: "haproxy.cfg.j2"
+  - service:
+      name: "haproxy"
+      state: restarted
+
+- name: "Updating Security Group Inbound rules"
+  hosts: localhost
+  tasks:
+  - package:
+      name: "python3"
+  - pip:
+      name: "boto3"
+  - name: "Updating SG inbound rule to allow traffic"
+    ec2_group:
+      name: "launch-wizard-2"
+      group_id: ""
+      description: "EC2 group"
+      vpc_id: "vpc-a3cb08de"
+      region: "us-east-1"
+      aws_secret_key: "u177DwpM2*******************P8"
+      aws_access_key: "AKIAQ***************F22KZMQ"
+      rules:
+      - proto: tcp
+        ports:
+        - 80
+        - 22
+        cidr_ip: 0.0.0.0/0
+        rule_desc: "allow all on port 80"
+    ec2_group:
+      name: "launch-wizard-3"
+      group_id: ""
+      description: "EC2 group"
+      vpc_id: "vpc-a3cb08de"
+      region: "us-east-1"
+      aws_secret_key: "u177DwpM2q7hCJhIz+HwOk6Q/KLTZiAeRkOb1HP8"
+      aws_access_key: "AKIAQWRASTHERF22KZMQ"
+      rules:
+      - proto: tcp
+        ports:
+        - 80
+        - 22
+        cidr_ip: 0.0.0.0/0
+        rule_desc: "allow all on port 80"
+    ec2_group:
+      name: "launch-wizard-4"
+      group_id: ""
+      description: "EC2 group"
+      vpc_id: "vpc-0add4af20c1bde27b"
+      region: "us-east-1"
+      aws_secret_key: "u177DwpM2q7hCJhIz+HwOk6Q/KLTZiAeRkOb1HP8"
+      aws_access_key: "AKIAQWRASTHERF22KZMQ"
+      rules:
+      - proto: tcp
+        ports:
+        - 8081
+        - 22
+        cidr_ip: 0.0.0.0/0
+        rule_desc: "allow all on port 8081"
