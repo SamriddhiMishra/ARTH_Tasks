@@ -1,0 +1,4 @@
+name: "apache2"
+service: "apache2"
+text: >
+        This webpage is in {{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_version'] }}

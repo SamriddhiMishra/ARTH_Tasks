@@ -1,0 +1,19 @@
+- hosts: all
+#  vars_files:
+#  - "{{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_version'] }}.yml"
+  become: true
+  become_user: root
+  tasks:
+  - include_vars: "{{ lookup('first_found', possible_files) }}"
+    vars:
+      possible_files:
+        files:
+        - "{{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_version'] }}.yml"
+  - package:
+      name: "{{ name }}"
+  - copy:
+      content: "{{ text }}"
+      dest: "/var/www/html/index.html"
+  - service:
+      name: "{{ service }}"
+      state: started
