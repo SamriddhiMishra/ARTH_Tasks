@@ -1,0 +1,23 @@
+---
+# tasks file for loadbalancer
+- name: "Installing Haproxy"
+  package:
+    name: "haproxy"
+
+-  name: "Copying the haproxy configuration template"
+   template:
+    dest: "/etc/haproxy/haproxy.cfg"
+    src: "haproxy.cfg.j2"
+
+-  name: "Starting the haproxy services"
+   service:
+    name: "haproxy"
+    state: restarted
+
+- name: "Creating rule for 8081/tcp in firewall"
+  firewalld:
+    port: "8081/tcp"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  ignore_errors: yes

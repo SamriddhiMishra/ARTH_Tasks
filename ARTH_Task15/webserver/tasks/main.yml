@@ -1,0 +1,27 @@
+---
+# tasks file for webserver
+- name: "Installing HTTPD and PHP"
+  package: 
+    name: "{{ item }}"
+    state: present
+  loop:
+  - "{{ pkg_name }}"
+  - "php"
+
+- name: "Copying the static file/webpage"
+  copy:
+    src: "index.php" 
+    dest: "/var/www/html"
+
+- name: "Starting the webserver services"
+  service:
+    name: "{{ service }}"
+    state: started
+
+- name: "Creating rule for 80/tcp in firewall"
+  firewalld:
+    port: "80/tcp"
+    state: enabled
+    permanent: yes
+    immediate: yes
+  ignore_errors: yes
