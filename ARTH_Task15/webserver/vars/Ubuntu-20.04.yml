@@ -1,0 +1,2 @@
+pkg_name: "apache2"
+service: "apache2"

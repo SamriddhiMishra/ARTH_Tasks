@@ -1,5 +1,11 @@
 ---
 # tasks file for webserver
+- include_vars: "{{ lookup('first_found', possible_files) }}"
+  vars:
+    possible_files:
+      files:
+      - "../vars/{{ ansible_facts['distribution'] }}-{{ ansible_facts['distribution_version'] }}.yml"
+
 - name: "Installing HTTPD and PHP"
   package: 
     name: "{{ item }}"

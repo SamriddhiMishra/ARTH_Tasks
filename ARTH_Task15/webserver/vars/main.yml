@@ -1,5 +1,2 @@
 ---
 # vars file for webserver
-
-pkg_name: "httpd"
-service: "httpd"
