@@ -1,0 +1,160 @@
+- hosts: targets
+  become: true
+  become_user: root
+
+  vars_prompt:
+  - name: http_port
+    private: no
+    prompt: "Enter docker host's port to map with container's port 80 - "
+
+  - name: ssh_port
+    private: no
+    prompt: "Enter docker host's port to map with container's port 22 - "
+
+  - name: dock_image
+    private: no
+    prompt: "Enter image name for docker - "
+
+
+  tasks:
+  - name: Create directory to mount dvd
+    file:
+      state: directory
+      path: "/dvd"
+    ignore_errors: yes
+
+  - name: Mount the dvd
+    mount:
+      src: "/dev/cdrom"
+      path: "/dvd"
+      fstype: "iso9660"
+      state: mounted
+    ignore_errors: yes
+
+  - name: Create yum_repository
+    yum_repository:
+      baseurl: "/dvd/AppStream"
+      name: "mydvd1"
+      description: "This is dvd1ffff"
+      gpgcheck: no
+
+  - name: Create yum_repository
+    yum_repository:
+      name: "mydvd2"
+      description: "This is dvd1sss"
+      baseurl: "/dvd/BaseOS"
+      gpgcheck: no
+
+  - name: Create yum_repository for docker
+    yum_repository:
+      baseurl: "https://download.docker.com/linux/centos/7/x86_64/stable/"
+      name: "docker-yum"
+      description: "Docker Repo"
+      state: present
+      gpgcheck: no
+
+  - name: Install python
+    package:
+      name: "python3"
+      state: present 
+ 
+  - name: Install docker-ce
+    command: "yum install docker-ce --nobest -y"
+    changed_when: false
+
+  - name: Start docker services
+    service:
+      name: "docker"
+      state: restarted
+      enabled: yes
+
+  - name: Install python library to manage docker
+    pip:
+      name: "docker"
+
+  - name: Stop SELinux
+    selinux:
+      policy: targeted
+      state: permissive
+
+  - name: Stop  Firewall
+    command: "systemctl stop firewalld"
+
+### Make sure to follow these steps in creating image-###
+# 1) yum install net-tools -y
+# 2) yum install openssh-server -y
+# 3) ssh-keygen -A
+# 4) put /usr/sbin/sshd in /root/.bashrc file
+# 5) set some password for root account, which is used in inventory file during ssh
+
+  - name: Pull the Docker Image
+    docker_image:
+      name: "{{ dock_image }}"
+      source: pull
+
+  - name: Launch Docker container
+    docker_container:
+      name: "myos"
+      image: "{{ dock_image }}"
+      detach: yes
+      state: started
+      interactive: yes
+      tty: yes
+      exposed_ports:
+      - "80"
+      - "22"
+      ports:
+      - "{{ http_port }}:80"
+      - "{{ ssh_port }}:22"
+
+# If some error occurs try to remove /root/.ssh/known_hosts file or entry for the target
+# in controller node
+
+## Updating the inventory file, to remote login to docker container ##
+        
+- hosts: localhost
+  vars_prompt:
+  - name: ssh_port
+    private: no
+    prompt: "Enter docker host's port to map with container's port 22 - "
+  tasks:
+  - name: Update the inventory
+    blockinfile:
+      dest: "/root/ip.txt"
+      block: |
+              [docker-hosts]
+              {% for i in groups['targets'] %}
+              {{ i }} ansible_user=root ansible_ssh_pass=root ansible_connection=ssh ansible_port={{ ssh_port }}
+              {% endfor %}
+              
+# docker-hosts group IPs won't be loaded automatically, need to refresh the inentory.
+
+  - name: Refresh the inventory file
+    meta: refresh_inventory
+
+- hosts: docker-hosts
+  become: true
+  become_user: root
+
+  tasks:
+
+  - name: Install httpd package
+    package:
+      name: "{{ item }}"
+      state: present
+    loop:
+    - "httpd"
+    - "php"
+
+  - name: Copy the php file
+    copy:
+      content: >
+               <pre>
+               <?php
+               print `/usr/sbin/ifconfig`;
+               ?>
+               </pre>
+      dest: "/var/www/html/index.php"
+
+  - name: Start Apache Webserver services
+    command: /usr/sbin/httpd
