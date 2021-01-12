@@ -40,7 +40,7 @@ Step 15) dnf install mysql -y
 
 Login to RDS database
 ---------------------
-Step 16) mysql -h wordpress.crljtex22whu.us-east-1.rds.amazonaws.com -u admin -p
+Step 16) mysql -h <endpoint_url> -u admin -p
 
 show databases;
 create database mydb;
