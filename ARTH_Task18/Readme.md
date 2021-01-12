@@ -1,6 +1,6 @@
-ARTH - Task 18 👨🏻‍💻
+# ARTH - Task 18 👨🏻‍💻
 
-Task Description📄
+## Task Description📄
 
 🔅 Create an AWS EC2 instance 
 
