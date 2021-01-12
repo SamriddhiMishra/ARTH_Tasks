@@ -1,0 +1,67 @@
+                                                 ############## Deploy WordPress with Amazon RDS ##############
+
+Step 1) Create database use engine version 5.7.31 - give public access
+Step 2) Create EC2 instance - Allow all traffic
+
+Step 3) Allow the EC2 instance to access the database by allowing instance in the Security Group of database
+
+Step 4) Login to EC2 instance via Putty
+
+--> To run WordPress requirements are:-
+  # PHP version 7.4 or greater. 
+  # MySQL version 5.6 or greater OR MariaDB version 10.1 or greater.
+
+--> PHP 7.x packages are available in several different repositories.
+  # We’ll use the Remi repository which provides newer versions of various software packages including PHP.
+  # The Remi repository depends on the EPEL repository.
+
+Run the following commands in EC2 instance to enable both EPEL and Remi repositories:
+-------------------------------------------------------------------------------------
+Step 5) yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm  -y
+Step 6) yum install https://rpms.remirepo.net/enterprise/remi-release-8.rpm  -y
+Step 7) dnf module install php:remi-7.4
+Step 8) dnf install php-mysqlnd
+
+Install httpd software and start services:
+-----------------------------------------
+Step 9) dnf install httpd wget -y
+Step 10) systemctl status httpd
+Step 11) systemctl start httpd
+Step 12) systemctl enable httpd
+
+Download the wordpress code:
+---------------------------
+Step 13) wget https://wordpress.org/latest.tar.gz
+Step 14) tar xf latest.tar.gz -C /var/www/html
+
+Install mysql software, check version by # mysql -v
+---------------------------------------------------
+Step 15) dnf install mysql -y
+
+Login to RDS database
+---------------------
+Step 16) mysql -h wordpress.crljtex22whu.us-east-1.rds.amazonaws.com -u admin -p
+
+show databases;
+create database mydb;
+exit;
+
+Make apache as owner of the wordpress folder
+--------------------------------------------
+Step 17) chown -R apache:apache *
+
+httpd can't write to folder/file because of SELinux so allow it
+---------------------------------------------------------------
+Step 19) setenforce 0
+Step 18) chcon -t httpd_sys_rw_content_t /var/www/html/wordpress -R
+
+Restart httpd services
+----------------------
+Step 19) systemctl restart httpd
+
+Wordpress Configuration
+-----------------------
+1) Give name of the database created
+2) give the master username given while creating RDS database instance
+3) respective password
+4) endpoint URL of the RDS database instance
