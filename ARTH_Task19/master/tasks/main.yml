@@ -1,0 +1,35 @@
+  - name: "Pull the images"
+    shell: "kubeadm config images pull"
+
+  - name: "Configuring the master node"
+    shell: "kubeadm init --pod-network-cidr=10.240.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem"
+    ignore_errors: yes
+
+## Creating Master node as User/Client for the cluster ##
+
+## This directory will hold configuration information such as the admin key files, which are required to connect to the cluster, and the clusters API address.##
+  - name: "Creating the directory"
+    file:
+      state: directory
+      dest: "$HOME/.kube"
+
+## Copying the file to user's home directory, this will allow user(of master) to use kubectl to access the cluster ##
+  - name: "Copying admin.conf to user's kube config"
+    copy:
+      src: "/etc/kubernetes/admin.conf"
+      remote_src: yes
+      dest: "$HOME/.kube/config"
+
+  - name: "Make current user owner of this config file"
+    shell: "chown $(id -u):$(id -g) $HOME/.kube/config"
+
+  - name: "Print join command for worker"
+    shell: "kubeadm token create --print-join-command"
+    register: token
+  
+  - name: "The join command"
+    debug:
+      msg: "{{ token['stdout'] }}"
+
+  - name: "Running Flannel"
+    shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"

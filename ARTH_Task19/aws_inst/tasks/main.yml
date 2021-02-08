@@ -1,0 +1,83 @@
+---
+# tasks file for aws_inst
+  - name: Installing boto3 lib
+    pip:
+      name: "boto3"
+
+  - name: Launching aws instance 1
+    ec2_instance:
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      image_id: "ami-047a51fa27710816e"
+      instance_type: t2.micro
+      key_name: "arthos"
+      region: "us-east-1"
+      name: "k8s-master"
+      security_group: mysgg
+      state: started
+      wait_timeout: 15
+    register: inst1_info
+
+  - debug:
+      var: inst1_info
+
+  - name: Launching aws instance 2
+    ec2_instance:
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      image_id: "ami-047a51fa27710816e"
+      instance_type: t2.micro
+      key_name: "arthos"
+      region: "us-east-1"
+      name: "k8s-node1"
+      security_group: mysgg
+      state: started
+      wait_timeout: 15
+    register: inst2_info
+
+
+  - debug:
+      var: inst2_info
+
+  - name: Launching aws instance 3
+    ec2_instance:
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      image_id: "ami-047a51fa27710816e"
+      instance_type: t2.micro
+      key_name: "arthos"
+      region: "us-east-1"
+      name: "k8s-node2"
+      security_group: mysgg
+      state: started
+      wait_timeout: 15
+    register: inst3_info
+
+  - debug:
+      var: inst3_info
+
+  - name: "Waiting until all instances are up"
+    pause:
+      minutes: 4
+
+  - name: Update the inventory
+    blockinfile:
+      dest: /root/ip.txt
+      marker: ""
+      block: |
+       [aws_inst_master]
+       {% for i in [inst1_info] %}
+       {{ i["instances"][0]["public_ip_address"] }} ansible_user=ec2-user ansible_ssh_private_key_file=arthos.pem
+       {% endfor %}
+
+       [aws_inst_nodes]
+       {% for i in [inst2_info,inst3_info] %}
+       {{ i["instances"][0]["public_ip_address"] }} ansible_user=ec2-user ansible_ssh_private_key_file=arthos.pem
+       {% endfor %}
+
+       [aws_inst:children]
+       aws_inst_master
+       aws_inst_nodes
+
+  - name: "Refresh the inventory"
+    meta: refresh_inventory

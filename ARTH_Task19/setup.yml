@@ -1,0 +1,33 @@
+# Make sure to copy the private key for instances in current directory as setup.yml
+# chmod 400 <private_key_file>
+# run above command to modify permissions of the private key
+
+- hosts: localhost
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+  - role: "aws_inst"
+
+- hosts: aws_inst_master
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+  - role: "docker_kubeadm"
+  - role: "master"
+
+- hosts: aws_inst_nodes
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  vars_prompt:
+  - name: join_cmd
+    prompt: "Enter the join command :- "
+    private: no
+  roles:
+  - role: "docker_kubeadm"
+  - role: "worker"

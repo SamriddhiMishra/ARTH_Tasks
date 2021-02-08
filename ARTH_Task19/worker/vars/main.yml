@@ -1,0 +1,6 @@
+---
+# vars file for worker
+vars_prompt:
+  - name: join_cmd
+    prompt: "Enter the join command :- "
+    private: no
