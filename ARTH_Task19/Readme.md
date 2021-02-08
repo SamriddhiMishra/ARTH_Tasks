@@ -13,3 +13,5 @@
 #### 2) docker_kubeadm => To install docker and kubeadm and start their services in nodes(both master and worker)
 #### 3) master => It is used along with docker_kubeadm to initialize k8s cluster and configure master
 #### 4) worker => To join worker node to the master of cluster
+
+Link to Video- [here](https://www.linkedin.com/posts/activity-6764564296862101505-7nTf)
