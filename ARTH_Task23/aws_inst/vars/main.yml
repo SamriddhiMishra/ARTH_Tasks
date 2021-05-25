@@ -1,0 +1,8 @@
+---
+# vars file for aws_inst
+secret_key: "K***************************M" 
+access_key: "A***********ML"
+ami: "ami-0d5eff06f840b45e9"
+sg: "sgg"
+key_pair: "arthk8s"
+inventory: "/root/ip.txt"

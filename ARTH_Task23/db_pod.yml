@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: dbpod
+  name: dbpod
+spec:
+  nodeSelector:
+    app: dbserver
+  containers:
+  - name: "dbpod"
+    image: "mysql:5.7"
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: "{{ db_root_pass }}"
+    - name: MYSQL_PASS
+      value: "{{ db_user_pass }}"
+    - name: MYSQL_USER
+      value: "{{ db_user }}"
+    - name: MYSQL_DATABASE
+      value: "{{ db_name }}"
+
+

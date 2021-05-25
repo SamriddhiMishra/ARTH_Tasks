@@ -1,0 +1,93 @@
+---
+# tasks file for kube-master
+  - name: "Install Docker"
+    package:
+      name: "docker"
+
+  - name: "Start Docker services"
+    service:
+      name: "docker"
+      enabled: yes
+      state: started
+   
+  - name: "Creating kubeadm yum repo" 
+    yum_repository:
+      name: "kubernetes"
+      description: "k8s repo"
+      baseurl: 'https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch'
+      gpgcheck: yes
+      repo_gpgcheck: yes
+      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+  - name: "Install kubeadm"
+    package:
+      name: kubeadm
+  
+  - name: "Start kubelet services"
+    service:
+      name: "kubelet"
+      enabled: yes
+      state: started
+
+  - name: "Creating docker config file"
+    copy:
+      dest: "/etc/docker/daemon.json"
+      content: |
+               {
+               "exec-opts": ["native.cgroupdriver=systemd"]
+               }
+
+  - name: "Restart Docker services"
+    service:
+      name: "docker"
+      state: restarted
+
+  - name: "Install iproute-tc"
+    package:
+      name: "iproute-tc"
+
+  - name: "iproute"
+    copy:
+      dest: "/etc/sysctl.d/k8s.conf"
+      content: |
+             net.bridge.bridge-nf-call-ip6tables = 1
+             net.bridge.bridge-nf-call-iptables = 1
+
+  - shell: "sysctl --system"
+
+  - name: "Pull the images"
+    shell: "kubeadm config images pull"
+
+  - name: "Configuring the master node"
+    shell: "kubeadm init --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=NumCPU --ignore-preflight-errors=Mem"
+    ignore_errors: yes
+
+## Creating Master node as User/Client for the cluster ##
+
+## This directory will hold configuration information such as the admin key files, which are required to connect to the cluster, and the clusters API address.##
+  - name: "Creating the directory"
+    file:
+      state: directory
+      dest: "$HOME/.kube"
+
+## Copying the file to user's home directory, this will allow user(of master) to use kubectl to access the cluster ##
+  - name: "Copying admin.conf to user's kube config"
+    copy:
+      src: "/etc/kubernetes/admin.conf"
+      remote_src: yes
+      dest: "$HOME/.kube/config"
+
+  - name: "Make current user owner of this config file"
+    shell: "chown $(id -u):$(id -g) $HOME/.kube/config"
+
+  - name: "Print join command for worker"
+    shell: "kubeadm token create --print-join-command"
+    register: token
+  
+  - name: "The join command"
+    debug:
+      msg: "{{ token['stdout'] }}"
+
+  - name: "Running Flannel"
+    shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+

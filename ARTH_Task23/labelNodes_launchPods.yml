@@ -1,0 +1,45 @@
+  - name: "Labelling this slave node for webserver"
+    shell: "kubectl label node {{ webserver_node }} app=webserver"
+
+  - name: "Labelling this slave node for database server"
+    shell: "kubectl label node {{ dbserver_node }} app=dbserver"
+
+  - name: Copy yml code for webserver pod
+    template:
+      src: web_pod.yml
+      dest: /
+
+  - name: Copy yml code for database server pod
+    template:
+      src: db_pod.yml
+      dest: /
+
+  - name: Launching dbserver pod on node
+    command: "kubectl apply -f /db_pod.yml"
+
+  - name: Launching webserver pod on node
+    command: "kubectl apply -f /web_pod.yml"
+
+  - name: Exposing the webserver pod at port 80
+    command: "kubectl expose pod  webpod --port=80 --type=NodePort"
+
+  - name: See the exposed port
+    command: "kubectl get svc webpod"
+    register: port_info
+
+  - name: See the webserver port
+    debug:
+      var: port_info["stdout_lines"]
+
+  - name: Sleep for 10 seconds, for pod's IP 
+    wait_for:
+      timeout: 50
+
+  - name: See the database server pod's IP
+    command: "kubectl get pods -o wide"
+    register: db_pod_ip
+
+  - name: See the dbserver pod IP
+    debug:
+      var: db_pod_ip["stdout_lines"]
+

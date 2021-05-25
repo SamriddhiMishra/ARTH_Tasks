@@ -1,0 +1,65 @@
+# Make sure to copy the private key for instances in current directory as setup.yml
+# chmod 400 <private_key_file>
+# run above command to modify permissions of the private key
+
+- hosts: localhost
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+  - role: "aws_inst"
+
+- hosts: aws_inst_master
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  roles:
+  - role: "kube-master"
+
+- hosts: aws_inst_nodes
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  vars_prompt:
+  - name: join_cmd
+    prompt: "Enter the join command :- "
+    private: no
+  roles:
+  - role: "kube-slave"
+
+- hosts: aws_slave1
+  tasks:
+  - debug:
+      msg: "This is Slave-1 with ip - {{ groups['aws_slave1'][0] }} , with node name as - {{ ansible_facts['fqdn'] }}"
+    ignore_errors: true
+
+- hosts: aws_slave2
+  tasks:
+  - debug:
+      msg: "This is Slave-2 with ip - {{ groups['aws_slave2'][0] }} , with node name as - {{ ansible_facts['fqdn'] }}"
+    ignore_errors: true
+
+- hosts: aws_inst_master
+  gather_facts: no
+  become: true
+  become_user: root
+  become_method: sudo
+  vars:
+    db_root_pass: "redhat"
+    db_user: "sam"
+    db_user_pass: "redhat"
+    db_name: "web_db"
+  vars_prompt:
+  - name: webserver_node
+    prompt: "Enter the node name to label it for webserver pod "
+    private: no
+
+  - name: dbserver_node
+    prompt: "Enter the node name to label it for database server pod "
+    private: no
+
+  tasks:
+  - include: labelNodes_launchPods.yml
