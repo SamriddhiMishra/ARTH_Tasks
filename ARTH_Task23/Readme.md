@@ -1,6 +1,6 @@
 # ARTH - Task 23 👨🏻‍💻 
 
-![](structure.png)
+![](diagram.png)
 
 # Task Description 📄
 
