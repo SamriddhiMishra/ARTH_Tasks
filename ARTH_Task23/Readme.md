@@ -1,5 +1,7 @@
 # ARTH - Task 23 👨🏻‍💻 
 
+![](structure.png)
+
 # Task Description 📄
 
 📌 Automate Kubernetes Cluster Using Ansible
@@ -23,4 +25,4 @@
 1) Use your key and inventory here, in place of arthk8s.pem and /root/ip.txt.
 2) Also do change the variables in vars folder in each role, if needed.
 
-Link to the post:-
+ Link to the post:- https://www.linkedin.com/posts/activity-6802846192448368640-t4yC
