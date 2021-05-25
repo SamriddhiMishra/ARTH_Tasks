@@ -1,6 +1,6 @@
-ARTH - Task 23 👨🏻‍💻 
+# ARTH - Task 23 👨🏻‍💻 
 
-Task Description 📄
+# Task Description 📄
 
 📌 Automate Kubernetes Cluster Using Ansible
 
@@ -18,9 +18,9 @@ Task Description 📄
 - Install ansible
 - Create inventory /root/ip.txt
 - Go to ansible's config file and set inventory=/root/ip.txt and put host_key_checking=False
-- make sure to chmod 400 arthk8s.pem , the private key.
+- Make sure to chmod 400 arthk8s.pem , the private key.
 
 1) Use your key and inventory here, in place of arthk8s.pem and /root/ip.txt.
 2) Also do change the variables in vars folder in each role, if needed.
 
-Link to the pose:-
+Link to the post:-
