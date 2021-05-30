@@ -1,0 +1,17 @@
+ARTH - Task 26 👨🏻‍💻 
+
+Task Description 📄
+
+📌 GUI container on the Docker
+
+🔅 Launch a container on docker in GUI mode 
+
+🔅 Run any GUI software on the container
+
+▪️ It is Compulsory Individual Task. 
+
+📍Below are the hashtags you have to use while posting your task
+#vimaldaga #righteducation #educationredefine #rightmentor #worldrecordholder #linuxworld #makingindiafutureready #righeducation #arthbylw #docker #container  
+
+docker build -t mz_gui .
+docker run -it  -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:0  mz_gui

@@ -1,0 +1,11 @@
+FROM centos:7
+
+RUN yum install firefox -y
+
+RUN yum install python3 -y
+
+RUN pip3 install jupyter
+
+RUN echo "export DISPLAY=:0" >> /root/.bashrc
+
+CMD ["jupyter", "notebook", "--allow-root" ]
